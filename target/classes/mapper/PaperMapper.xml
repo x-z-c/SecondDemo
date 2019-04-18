@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dao.PaperDao">
+
+    <resultMap type="Teacher" id="teacherResultMap" >
+        <id property="jid" column="jid"/>
+        <result property="jrw" column="jrw"/>
+        <result property="jdate" column="jdate"/>
+    </resultMap>
+
+
+    <resultMap id="BaseResultMap" type="com.pojo.User" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="username" property="username" jdbcType="VARCHAR" />
+        <result column="pwd" property="pwd" jdbcType="VARCHAR" />
+        <result column="type1" property="type1" jdbcType="VARCHAR" />
+
+    </resultMap>
+
+    <select id="selectByBJ" resultType="int" parameterType="String">
+        select count(*) from xue where xbj=#{xbj} and xjg is  not null
+    </select>
+
+
+    <select id="selectByName" parameterType="String" resultType="StudentEntity">
+        select  * from  xue where xbj=#{xbj} group by xbj
+    </select>
+
+    <select id="selectAllCount" resultType="int" parameterType="String">
+        select count(*) from xue where  xbj=#{xbj}
+    </select>
+
+
+    <select id="selectByBJ1" resultType="StudentEntity">
+        select xbj from xue group by xbj
+    </select>
+
+
+
+    <select id="login" resultMap="BaseResultMap">
+    select * from user where username = #{username ,jdbcType=VARCHAR} and pwd = #{pwd,jdbcType=VARCHAR} and type1 =#{type1 ,jdbcType=VARCHAR}
+  </select>
+
+    <delete id="deletePaperById" parameterType="long">
+        DELETE FROM jiaoshi WHERE jid=#{jid}
+    </delete>
+    <select id="queryAllPaper" resultMap="teacherResultMap">
+        SELECT id,name,type
+        FROM shop where 1=1
+    </select>
+    <select id="selbyzy" resultType="com.pojo.Student" parameterType="long">
+        SELECT *
+        FROM xue where jid=#{jid}
+    </select>
+
+    <select id="selbyids" resultType="com.pojo.StudentEntity" parameterType="long">
+        SELECT *
+        FROM xue
+        WHERE xid=#{xid}
+    </select>
+
+    <select id="selbyall" resultMap="teacherResultMap">
+        SELECT jid,jrw,jdate
+        FROM jiaoshi where 1=1
+    </select>
+    <select id="queryByname" resultMap="teacherResultMap" parameterType="String">
+      select * from shop where name like CONCAT('%',#{name},"%")
+    </select>
+    <select id="queryById" resultType="com.pojo.Student" parameterType="long">
+        SELECT xid,xjg,x
+        FROM shop
+        WHERE id=#{id}
+    </select>
+
+    <update id="updatePaper" parameterType="Shop">
+        UPDATE shop
+        SET name = #{name},type = #{type}
+        WHERE  id = #{id}
+    </update>
+    <update id="updatestudent" parameterType="StudentEntity">
+        UPDATE xue SET jpy = #{jpy},jtype = #{jtype} WHERE  xid = #{xid}
+    </update>
+    <insert id="addPapers" parameterType="Teacher">
+        INSERT INTO jiaoshi(jid,jrw,jdate) VALUE (null,#{jrw}, #{jdate})
+    </insert>
+
+
+
+    <insert id="addStudent" parameterType="Student">
+        INSERT INTO xue(xid,xjg,jid,xdate) VALUE (null,#{xjg},#{jid},#{xdate})
+    </insert>
+
+
+
+
+
+
+</mapper>
+
